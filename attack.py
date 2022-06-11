@@ -90,7 +90,7 @@ def train_shadow_models(n_hidden=50, epochs=100, n_shadow=20, learning_rate=0.05
     attack_x, attack_y = [], []
     classes = []
     for i in xrange(n_shadow):
-        print 'Training shadow model {}'.format(i)
+        print('Training shadow model {}'.format(i))
         data = load_data('shadow{}_data.npz'.format(i))
         train_x, train_y, test_x, test_y = data
         # train model
@@ -98,7 +98,7 @@ def train_shadow_models(n_hidden=50, epochs=100, n_shadow=20, learning_rate=0.05
                                    batch_size=batch_size, model=model, l2_ratio=l2_ratio)
         prob = lasagne.layers.get_output(output_layer, input_var, deterministic=True)
         prob_fn = theano.function([input_var], prob)
-        print 'Gather training data for attack model'
+        print('Gather training data for attack model')
         attack_i_x, attack_i_y = [], []
         # data used in training, label is 1
         for batch in iterate_minibatches(train_x, train_y, batch_size, False):
@@ -138,7 +138,7 @@ def train_attack_model(classes, dataset=None, n_hidden=50, learning_rate=0.01, b
     true_y = []
     pred_y = []
     for c in unique_classes:
-        print 'Training attack model for class {}...'.format(c)
+        print('Training attack model for class {}...'.format(c))
         c_train_indices = train_indices[train_classes == c]
         c_train_x, c_train_y = train_x[c_train_indices], train_y[c_train_indices]
         c_test_indices = test_indices[test_classes == c]
@@ -149,19 +149,19 @@ def train_attack_model(classes, dataset=None, n_hidden=50, learning_rate=0.01, b
         true_y.append(c_test_y)
         pred_y.append(c_pred_y)
 
-    print '-' * 10 + 'FINAL EVALUATION' + '-' * 10 + '\n'
+    print('-' * 10 + 'FINAL EVALUATION' + '-' * 10 + '\n')
     true_y = np.concatenate(true_y)
     pred_y = np.concatenate(pred_y)
-    print 'Testing Accuracy: {}'.format(accuracy_score(true_y, pred_y))
-    print classification_report(true_y, pred_y)
+    print('Testing Accuracy: {}'.format(accuracy_score(true_y, pred_y)))
+    print(classification_report(true_y, pred_y))
 
 
 def save_data():
-    print '-' * 10 + 'SAVING DATA TO DISK' + '-' * 10 + '\n'
+    print('-' * 10 + 'SAVING DATA TO DISK' + '-' * 10 + '\n')
 
     x, y, test_x, test_y = load_dataset(args.train_feat, args.train_label, args.test_feat, args.train_label)
     if test_x is None:
-        print 'Splitting train/test data with ratio {}/{}'.format(1 - args.test_ratio, args.test_ratio)
+        print('Splitting train/test data with ratio {}/{}'.format(1 - args.test_ratio, args.test_ratio))
         x, test_x, y, test_y = train_test_split(x, y, test_size=args.test_ratio, stratify=y)
 
     # need to partition target and shadow model data
@@ -171,7 +171,7 @@ def save_data():
     np.savez(MODEL_PATH + 'data_indices.npz', target_data_indices, shadow_indices)
 
     # target model's data
-    print 'Saving data for target model'
+    print('Saving data for target model')
     train_x, train_y = x[target_data_indices], y[target_data_indices]
     size = len(target_data_indices)
     if size < len(test_x):
@@ -186,7 +186,7 @@ def save_data():
     shadow_indices = np.arange(len(shadow_indices))
 
     for i in xrange(args.n_shadow):
-        print 'Saving data for shadow model {}'.format(i)
+        print('Saving data for shadow model {}'.format(i))
         shadow_i_indices = np.random.choice(shadow_indices, 2 * target_size, replace=False)
         shadow_i_x, shadow_i_y = shadow_x[shadow_i_indices], shadow_y[shadow_i_indices]
         train_x, train_y = shadow_i_x[:target_size], shadow_i_y[:target_size]
@@ -201,7 +201,7 @@ def load_data(data_name):
 
 
 def attack_experiment():
-    print '-' * 10 + 'TRAIN TARGET' + '-' * 10 + '\n'
+    print('-' * 10 + 'TRAIN TARGET' + '-' * 10 + '\n')
     dataset = load_data('target_data.npz')
     attack_test_x, attack_test_y, test_classes = train_target_model(
         dataset=dataset,
@@ -213,7 +213,7 @@ def attack_experiment():
         model=args.target_model,
         save=args.save_model)
 
-    print '-' * 10 + 'TRAIN SHADOW' + '-' * 10 + '\n'
+    print('-' * 10 + 'TRAIN SHADOW' + '-' * 10 + '\n')
     attack_train_x, attack_train_y, train_classes = train_shadow_models(
         epochs=args.target_epochs,
         batch_size=args.target_batch_size,
@@ -224,7 +224,7 @@ def attack_experiment():
         model=args.target_model,
         save=args.save_model)
 
-    print '-' * 10 + 'TRAIN ATTACK' + '-' * 10 + '\n'
+    print('-' * 10 + 'TRAIN ATTACK' + '-' * 10 + '\n')
     dataset = (attack_train_x, attack_train_y, attack_test_x, attack_test_y)
     train_attack_model(
         dataset=dataset,
@@ -267,7 +267,7 @@ if __name__ == '__main__':
 
     # parse configuration
     args = parser.parse_args()
-    print vars(args)
+    print(vars(args))
     if args.save_data:
         save_data()
     else:

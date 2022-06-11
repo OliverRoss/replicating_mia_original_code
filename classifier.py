@@ -58,14 +58,14 @@ def train(dataset, n_hidden=50, batch_size=100, epochs=100, learning_rate=0.01, 
     if batch_size > len(train_y):
         batch_size = len(train_y)
 
-    print 'Building model with {} training data, {} classes...'.format(len(train_x), n_out)
+    print('Building model with {} training data, {} classes...'.format(len(train_x), n_out))
     input_var = T.matrix('x')
     target_var = T.ivector('y')
     if model == 'nn':
-        print 'Using neural network...'
+        print('Using neural network...')
         net = get_nn_model(n_in, n_hidden, n_out)
     else:
-        print 'Using softmax regression...'
+        print('Using softmax regression...')
         net = get_softmax_model(n_in, n_out)
 
     net['input'].input_var = input_var
@@ -84,13 +84,13 @@ def train(dataset, n_hidden=50, batch_size=100, epochs=100, learning_rate=0.01, 
     test_prediction = lasagne.layers.get_output(output_layer, deterministic=True)
     test_fn = theano.function([input_var], test_prediction)
 
-    print 'Training...'
+    print('Training...')
     for epoch in range(epochs):
         loss = 0
         for input_batch, target_batch in iterate_minibatches(train_x, train_y, batch_size):
             loss += train_fn(input_batch, target_batch)
         loss = round(loss, 3)
-        print 'Epoch {}, train loss {}'.format(epoch, loss)
+        print('Epoch {}, train loss {}'.format(epoch, loss))
 
     pred_y = []
     for input_batch, _ in iterate_minibatches(train_x, train_y, batch_size, shuffle=False):
@@ -98,11 +98,11 @@ def train(dataset, n_hidden=50, batch_size=100, epochs=100, learning_rate=0.01, 
         pred_y.append(np.argmax(pred, axis=1))
     pred_y = np.concatenate(pred_y)
 
-    print 'Training Accuracy: {}'.format(accuracy_score(train_y, pred_y))
-    print classification_report(train_y, pred_y)
+    print('Training Accuracy: {}'.format(accuracy_score(train_y, pred_y)))
+    print(classification_report(train_y, pred_y))
 
     if test_x is not None:
-        print 'Testing...'
+        print('Testing...')
         pred_y = []
 
         if batch_size > len(test_y):
@@ -112,8 +112,8 @@ def train(dataset, n_hidden=50, batch_size=100, epochs=100, learning_rate=0.01, 
             pred = test_fn(input_batch)
             pred_y.append(np.argmax(pred, axis=1))
         pred_y = np.concatenate(pred_y)
-        print 'Testing Accuracy: {}'.format(accuracy_score(test_y, pred_y))
-        print classification_report(test_y, pred_y)
+        print('Testing Accuracy: {}'.format(accuracy_score(test_y, pred_y)))
+        print(classification_report(test_y, pred_y))
 
     # return the query function
     if rtn_layer:
@@ -149,7 +149,7 @@ def main():
     parser.add_argument('--n_hidden', type=int, default=50)
     parser.add_argument('--epochs', type=int, default=100)
     args = parser.parse_args()
-    print vars(args)
+    print(vars(args))
     dataset = load_dataset(args.train_feat, args.train_label, args.test_feat, args.train_label)
     train(dataset,
           model=args.model,
