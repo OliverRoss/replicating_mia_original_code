@@ -1,2 +1,13 @@
 # Virtual environment
 .venv/
+
+# Models and data
+data/
+model/
+raw_data
+train_feat_file
+train_label_file
+
+# Cache
+__pycache__/
+
