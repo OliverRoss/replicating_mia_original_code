@@ -1,4 +1,4 @@
 scikit-learn
-numpy
-theano
+numpy==1.20.3 ; python_version < '3.9'
+theano==0.7
 lasagne
