@@ -89,7 +89,7 @@ def train_shadow_models(n_hidden=50, epochs=100, n_shadow=20, learning_rate=0.05
     # for attack model
     attack_x, attack_y = [], []
     classes = []
-    for i in xrange(n_shadow):
+    for i in range(n_shadow):
         print('Training shadow model {}'.format(i))
         data = load_data('shadow{}_data.npz'.format(i))
         train_x, train_y, test_x, test_y = data
@@ -185,7 +185,7 @@ def save_data():
     shadow_x, shadow_y = x[shadow_indices], y[shadow_indices]
     shadow_indices = np.arange(len(shadow_indices))
 
-    for i in xrange(args.n_shadow):
+    for i in range(args.n_shadow):
         print('Saving data for shadow model {}'.format(i))
         shadow_i_indices = np.random.choice(shadow_indices, 2 * target_size, replace=False)
         shadow_i_x, shadow_i_y = shadow_x[shadow_i_indices], shadow_y[shadow_i_indices]
