@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  replicate:
+    image: replicate
+    volumes:
+      - .:/replicating_mia
+    stdin_open: true
+    tty: true
+    entrypoint: /bin/bash
