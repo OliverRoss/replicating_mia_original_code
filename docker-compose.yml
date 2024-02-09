@@ -5,5 +5,6 @@ services:
     volumes:
       - .:/replicating_mia
     stdin_open: true
+    user: $UID:$GID
     tty: true
     entrypoint: /bin/bash
